@@ -1,0 +1,11 @@
+<table>
+  <ng-container *ngFor="let ranks of diagram; let rank = index">
+    <tr>
+      <ng-container *ngFor="let piece of ranks; let file = index">
+        <td>
+          <kt-square [file]="file" [rank]="rank" [pieceLabel]="piece.toString()"></kt-square>
+        </td>
+      </ng-container>
+    </tr>
+  </ng-container>
+</table>

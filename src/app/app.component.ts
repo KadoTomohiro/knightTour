@@ -14,10 +14,11 @@ export class AppComponent {
   tour: Tour
 
   constructor() {
-    this.board = new Board(10, 10)
-    this.tour = new Tour(this.board)
+    const board= new Board(5, 5)
+    this.tour = new Tour(board)
 
     this.tour.start({file: 0, rank: 0})
 
+    this.board = board
   }
 }

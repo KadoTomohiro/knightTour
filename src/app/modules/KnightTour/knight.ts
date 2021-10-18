@@ -26,7 +26,7 @@ export class Knight implements Piece {
 
 
   toString(): string {
-    return 'K'
+    return 'N'
   }
 
 }
