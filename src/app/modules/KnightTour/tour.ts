@@ -12,26 +12,25 @@ export class Tour {
 
   private search(currentPosition: Position): TourResult {
     this.board.move(currentPosition)
+    console.log( this.board.toString())
     if (this.board.filledSquares) {
       return 'success'
     }
 
-    const nextPositions = this.board.nextPosition()
-      .sort(this.sorter)
-      // .sort(this.randomSorter)
+    const nextPositions = this.board.nextPosition(currentPosition)
+      // .sort(this.sorter)
 
     if (nextPositions.length === 0 && !this.board.filledSquares) {
-      this.board.back()
+      this.board.back(currentPosition)
       return 'failed'
     }
+
     for (let position of nextPositions){
       const result = this.search(position)
       if (result === 'success') return result
     }
 
-    this.board.back()
-
-
+    this.board.back(currentPosition)
     return 'failed'
 
   }

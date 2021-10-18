@@ -1,1 +1,5 @@
-<kt-board [board]="board"></kt-board>
+<kt-board [diagram]="diagram"></kt-board>
+
+<ng-container *ngIf="observedDiagram | async as od" >
+  <kt-board [diagram]="od"></kt-board>
+</ng-container>

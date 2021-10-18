@@ -3,17 +3,21 @@ import {Squares} from "./square";
 import {Knight} from "./knight";
 import {Marker} from "./marker";
 import {PhaseDiagram} from './PhaseDiagram';
+import {resolve} from "@angular/compiler-cli/src/ngtsc/file_system";
 
 export class Board {
   private squares: Squares
   currentPosition: Position | null = null
   private knight = new Knight()
+
+  private callback: ((diagram: PhaseDiagram) => void) | undefined
   constructor(private fileSize: number, private rankSize: number) {
     if (!Board.validSize(this.fileSize)) throw new RangeError('fileSize require nature number')
     if (!Board.validSize(this.rankSize)) throw new RangeError('rankSize require nature number')
 
     this.squares = new Squares(fileSize, rankSize)
   }
+
   // 盤面のマス数
   get size(): number {
     return this.fileSize * this.rankSize
@@ -30,11 +34,14 @@ export class Board {
   move(nextPosition: Position): void {
     this.squares.get(nextPosition).put(new Marker(this.pieceCount() + 1))
     this.currentPosition = nextPosition
+
+    this.streaming()
   }
 
-  back(): void {
-    if (!this.currentPosition) return
-    this.squares.get(this.currentPosition).remove()
+  back(position: Position): void {
+    this.squares.get(position).remove()
+
+    this.streaming()
   }
 
   nextPosition(currentPosition = this.currentPosition): Position[] {
@@ -64,7 +71,15 @@ export class Board {
       }
       diagram.push(rankPieces)
     }
-      return diagram
+    return diagram
+  }
+
+  subscribe(callback: (diagram: PhaseDiagram) => void) {
+    this.callback = callback
+  }
+
+  streaming = () => {
+    if (this.callback) this.callback(this.getPhaseDiagram())
   }
 
   toString(): string {
