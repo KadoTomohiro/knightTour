@@ -1,5 +1,5 @@
 import {Position} from "./position";
-import {Square, Squares} from "./square";
+import {Squares} from "./square";
 import {Knight} from "./knight";
 import {Marker} from "./marker";
 
