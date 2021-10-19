@@ -1,5 +1,8 @@
-<kt-board [diagram]="diagram"></kt-board>
+<main>
+  <section>
+    <kt-size-input [(ngModel)]="fileSize">file</kt-size-input> x <kt-size-input [(ngModel)]="rankSize">rank</kt-size-input>
+  </section>
 
-<ng-container *ngIf="observedDiagram | async as od" >
-  <kt-board [diagram]="od"></kt-board>
-</ng-container>
+  <kt-board [fileSize]="fileSize" [rankSize]="rankSize" [diagram]="diagram"></kt-board>
+
+</main>

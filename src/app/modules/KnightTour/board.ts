@@ -1,24 +1,28 @@
 import {Position} from "./position";
-import {Squares} from "./square";
+import {Square} from './square';
 import {Knight} from "./knight";
 import {Marker} from "./marker";
 import {PhaseDiagram} from './PhaseDiagram';
-import {resolve} from "@angular/compiler-cli/src/ngtsc/file_system";
 
 export class Board {
-  private squares: Squares
   currentPosition: Position | null = null
   private knight = new Knight()
+  private readonly squares: Square[][]
 
-  private callback: ((diagram: PhaseDiagram) => void) | undefined
   constructor(private fileSize: number, private rankSize: number) {
     if (!Board.validSize(this.fileSize)) throw new RangeError('fileSize require nature number')
     if (!Board.validSize(this.rankSize)) throw new RangeError('rankSize require nature number')
-
-    this.squares = new Squares(fileSize, rankSize)
+    this.squares = []
+    for (let rank = 0; rank < this.rankSize; rank++) {
+      const files = []
+      for (let file = 0; file < this.fileSize; file++) {
+        files.push(new Square())
+      }
+      this.squares.push(files)
+    }
   }
 
-  // 盤面のマス数
+// 盤面のマス数
   get size(): number {
     return this.fileSize * this.rankSize
   }
@@ -28,27 +32,27 @@ export class Board {
   }
 
   pieceCount(): number {
-    return this.squares.pieceCount()
+    return this.flatSquares
+      .filter(square => !square.empty)
+      .length
   }
 
   move(nextPosition: Position): void {
-    this.squares.get(nextPosition).put(new Marker(this.pieceCount() + 1))
+    this.getSquare(nextPosition).put(new Marker(this.pieceCount() + 1))
     this.currentPosition = nextPosition
 
-    this.streaming()
   }
 
   back(position: Position): void {
-    this.squares.get(position).remove()
+    this.getSquare(position).remove()
 
-    this.streaming()
   }
 
   nextPosition(currentPosition = this.currentPosition): Position[] {
     if (!currentPosition) return []
     return this.knight.destination(currentPosition)
       .filter(position => this.insideBoard(position))
-      .filter(position => this.squares.get(position).empty)
+      .filter(position => this.getSquare(position).empty)
   }
 
   insideBoard(position: Position): boolean {
@@ -67,22 +71,28 @@ export class Board {
     for(let rank = 0; rank < this.rankSize; rank++) {
       const rankPieces = []
       for(let file = 0; file < this.fileSize; file++) {
-        rankPieces.push(this.squares.get({file, rank}).piece)
+        rankPieces.push(this.getSquare({file, rank}).piece)
       }
       diagram.push(rankPieces)
     }
     return diagram
   }
 
-  subscribe(callback: (diagram: PhaseDiagram) => void) {
-    this.callback = callback
+  get flatSquares() {
+    return this.squares
+      .flat();
   }
 
-  streaming = () => {
-    if (this.callback) this.callback(this.getPhaseDiagram())
+  private getSquare(position: Position): Square {
+    return this.squares[position.rank][position.file]
   }
 
-  toString(): string {
-    return this.squares.toString()
+  toString() {
+    return this.squares
+      .map(files => files
+        .map(square => (square.piece?.toString() ?? '').padStart(2, ' '))
+        .join(','))
+      .join('\n')
+
   }
 }

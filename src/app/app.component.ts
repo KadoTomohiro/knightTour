@@ -11,29 +11,22 @@ import {fromPromise} from "rxjs/internal-compatibility";
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'knightTour';
+
+  fileSize: number =8
+  rankSize: number = 8
+
   tour: Tour
 
   log: PhaseDiagram[] = []
 
   diagram: PhaseDiagram = []
 
-  observedDiagram: Observable<PhaseDiagram>
 
   constructor() {
-    const board= new Board(5, 5)
+    const board= new Board(8, 8)
     this.tour = new Tour(board)
-    this.observedDiagram = bindCallback<PhaseDiagram>(board.subscribe)()
+    this.tour.start({file: 0, rank: 0})
 
-    new Promise<void>(((resolve, reject) => {
-      const result = this.tour.start({file: 0, rank: 0})
-      if (result === 'success') {
-        this.diagram = board.getPhaseDiagram()
-
-        resolve()
-      }
-      reject()
-    })).then()
-
+    this.diagram = board.getPhaseDiagram()
   }
 }
