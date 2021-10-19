@@ -1,0 +1,7 @@
+button {
+  height: 2em;
+  border: lightgray 1px solid;
+  border-radius: 2px;
+  padding: 0.3em 0.7em;
+  line-height: 1.2;
+}
