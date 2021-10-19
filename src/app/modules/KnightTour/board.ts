@@ -78,6 +78,10 @@ export class Board {
     return diagram
   }
 
+  clearAll() {
+    this.flatSquares.forEach((square: Square) => square.remove())
+  }
+
   get flatSquares() {
     return this.squares
       .flat();

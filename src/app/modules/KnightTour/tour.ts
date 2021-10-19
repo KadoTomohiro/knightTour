@@ -11,12 +11,12 @@ export class Tour {
   constructor(private board: Board) {}
 
   start(initialPosition: Position): TourResult {
+    this.board.clearAll()
     return this.search(initialPosition)
   }
 
   private search(currentPosition: Position): TourResult {
     this.board.move(currentPosition)
-    console.log( this.board.toString())
     if (this.board.filledSquares) {
       return 'success'
     }

@@ -1,4 +1,4 @@
-import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 
 @Component({
@@ -15,21 +15,15 @@ import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 })
 export class SizeInputComponent implements OnInit, ControlValueAccessor {
 
-  @ViewChild('sizeInput') private input!: ElementRef
+  @ViewChild('input') private input!: ElementRef
 
   onChange: (obj:any) => void = () => {}
   onTouche: (obj:any) => void = () => {}
   disabled: boolean = false
-
-
   constructor() {
   }
-
   ngOnInit(): void {
-    console.log(this.input)
-
   }
-
 
   registerOnChange(fn: any): void {
     this.onChange = fn
@@ -41,6 +35,7 @@ export class SizeInputComponent implements OnInit, ControlValueAccessor {
 
   writeValue(obj: any): void {
     if (!this.input) return
+    console.log(obj)
     this.input.nativeElement.value = obj
   }
 
