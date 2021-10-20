@@ -1,8 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {Board} from '../modules/KnightTour/board';
 import {PhaseDiagram} from '../modules/KnightTour/PhaseDiagram';
-import {Observable} from "rxjs";
-import {Position} from '../modules/KnightTour/position';
+import {Position, Size} from '../modules/KnightTour/types';
 
 @Component({
   selector: 'kt-board',
@@ -11,8 +9,7 @@ import {Position} from '../modules/KnightTour/position';
 })
 export class BoardComponent implements OnInit {
 
-  @Input() fileSize!: number
-  @Input() rankSize!:  number
+  @Input() size!: Size
   @Input() diagram: PhaseDiagram = []
 
   @Output() selectSquare: EventEmitter<Position> =  new EventEmitter<Position>()

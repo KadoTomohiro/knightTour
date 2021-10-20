@@ -1,5 +1,5 @@
 import {Board} from "./board";
-import {Position} from "./position";
+import {Position} from "./types";
 import {Injectable} from '@angular/core';
 
 type TourResult = 'success' | 'failed'
@@ -24,7 +24,9 @@ export class Tour {
     const nextPositions = this.board.nextPosition(currentPosition)
       .sort(this.sorter)
 
-    if (nextPositions.length === 0 && !this.board.filledSquares) {
+    const continuable = nextPositions.length > 0
+
+    if (!continuable && !this.board.filledSquares) {
       this.board.back(currentPosition)
       return 'failed'
     }

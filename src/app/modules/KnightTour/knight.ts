@@ -1,7 +1,12 @@
-import {Piece} from "./piece";
-import {Position} from "./position";
+import {outSideBoard, OutSideBoard, Piece} from './piece';
+import {Position} from "./types";
 
 export class Knight implements Piece {
+  private _position: Position | OutSideBoard
+  constructor() {
+    this._position = outSideBoard
+  }
+
   static readonly movementRules =  [
     {file: -1, rank: -2},
     {file: 1, rank: -2},
@@ -24,6 +29,13 @@ export class Knight implements Piece {
       })
   }
 
+  put(position: Position) {
+    this._position = position
+  }
+
+  get position() {
+    return this._position
+  }
 
   toString(): string {
     return 'N'

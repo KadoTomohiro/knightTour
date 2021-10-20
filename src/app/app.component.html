@@ -1,13 +1,8 @@
 <main>
   <section>
-    <input [(ngModel)]="fileSize" type="number" min="0" step="1"/>file x <input [(ngModel)]="rankSize" type="number" min="0" step="1"/>rank
+    <input [formControl]="fileSize" type="number" min="0" step="1"/>file x <input [formControl]="rankSize" type="number" min="0" step="1"/>rank
     <kt-button (click)="resetBoard()">Reset</kt-button>
   </section>
 
-  <kt-board [fileSize]="fileSize" [rankSize]="rankSize" [diagram]="diagram" (selectSquare)="selectStartPosition($event)"></kt-board>
-
-  <div>
-    file:{{fileSize}}; rank:{{rankSize}}
-
-  </div>
+  <kt-board [size]="size" [diagram]="diagram" (selectSquare)="selectStartPosition($event)"></kt-board>
 </main>

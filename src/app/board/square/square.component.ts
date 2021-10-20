@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {Position} from '../../modules/KnightTour/position';
+import {Position} from '../../modules/KnightTour/types';
 
 @Component({
   selector: 'kt-square',

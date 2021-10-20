@@ -1,21 +1,31 @@
-import {Position} from "./position";
+import {Position, Size} from './types';
 import {Square} from './square';
 import {Knight} from "./knight";
 import {Marker} from "./marker";
 import {PhaseDiagram} from './PhaseDiagram';
+import {Piece} from './piece';
+
+type Move = {
+  from: Position
+  to: Position
+  piece: Piece
+}
+
+type BoardRecord = Move[]
 
 export class Board {
   currentPosition: Position | null = null
   private knight = new Knight()
   private readonly squares: Square[][]
+  private record: BoardRecord =  []
 
-  constructor(private fileSize: number, private rankSize: number) {
-    if (!Board.validSize(this.fileSize)) throw new RangeError('fileSize require nature number')
-    if (!Board.validSize(this.rankSize)) throw new RangeError('rankSize require nature number')
+  constructor(private size: Size) {
+    if (!Board.validSize(this.size.file)) throw new RangeError('fileSize require nature number')
+    if (!Board.validSize(this.size.rank)) throw new RangeError('rankSize require nature number')
     this.squares = []
-    for (let rank = 0; rank < this.rankSize; rank++) {
+    for (let rank = 0; rank < this.size.rank; rank++) {
       const files = []
-      for (let file = 0; file < this.fileSize; file++) {
+      for (let file = 0; file < this.size.file; file++) {
         files.push(new Square())
       }
       this.squares.push(files)
@@ -23,12 +33,12 @@ export class Board {
   }
 
 // 盤面のマス数
-  get size(): number {
-    return this.fileSize * this.rankSize
+  get squareCount(): number {
+    return this.size.file * this.size.rank
   }
 
   get filledSquares(): boolean {
-    return this.pieceCount() === this.size
+    return this.pieceCount() === this.squareCount
   }
 
   pieceCount(): number {
@@ -37,18 +47,23 @@ export class Board {
       .length
   }
 
-  move(nextPosition: Position): void {
-    this.getSquare(nextPosition).put(new Marker(this.pieceCount() + 1))
+  move(piece: Piece, nextPosition: Position): void {
+    const currentPosition =  piece.position
+    this.record.push({piece, from: currentPosition, to: nextPosition})
+    piece.put(nextPosition)
+
+    this.getSquare(currentPosition).put(new Marker(this.pieceCount()))
+    this.getSquare(nextPosition).put(piece)
+
     this.currentPosition = nextPosition
 
   }
 
   back(position: Position): void {
     this.getSquare(position).remove()
-
   }
 
-  nextPosition(currentPosition = this.currentPosition): Position[] {
+  nextPosition(currentPosition: Position): Position[] {
     if (!currentPosition) return []
     return this.knight.destination(currentPosition)
       .filter(position => this.insideBoard(position))
@@ -57,8 +72,8 @@ export class Board {
 
   insideBoard(position: Position): boolean {
     const {file, rank} =  position
-    const insideFile = 0 <= file && file < this.fileSize
-    const insideRank = 0 <= rank && rank < this.rankSize
+    const insideFile = 0 <= file && file < this.size.file
+    const insideRank = 0 <= rank && rank < this.size.rank
     return insideFile && insideRank
   }
 
@@ -68,9 +83,9 @@ export class Board {
 
   getPhaseDiagram(): PhaseDiagram {
     const diagram: PhaseDiagram = []
-    for(let rank = 0; rank < this.rankSize; rank++) {
+    for(let rank = 0; rank < this.size.rank; rank++) {
       const rankPieces = []
-      for(let file = 0; file < this.fileSize; file++) {
+      for(let file = 0; file < this.size.file; file++) {
         rankPieces.push(this.getSquare({file, rank}).piece)
       }
       diagram.push(rankPieces)

@@ -1,9 +1,9 @@
 
 
 <table>
-  <ng-container *ngFor="let rank of range(rankSize)">
+  <ng-container *ngFor="let rank of range(size.rank)">
     <tr>
-      <ng-container *ngFor="let file of range(fileSize)">
+      <ng-container *ngFor="let file of range(size.file)">
         <td>
           <kt-square [file]="file" [rank]="rank" [pieceLabel]="pieceLabel(file, rank)" (select)="onSelect($event)"></kt-square>
         </td>

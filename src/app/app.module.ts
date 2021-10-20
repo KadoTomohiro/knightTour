@@ -6,7 +6,7 @@ import { AppComponent } from './app.component';
 import { BoardComponent } from './board/board.component';
 import { SquareComponent } from './board/square/square.component';
 import { SizeInputComponent } from './size-input/size-input.component';
-import {FormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { ButtonComponent } from './button/button.component';
 
 @NgModule({
@@ -20,7 +20,7 @@ import { ButtonComponent } from './button/button.component';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    FormsModule
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

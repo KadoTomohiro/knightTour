@@ -1,5 +1,5 @@
 import {Piece} from "./piece";
-import {Position} from "./position";
+import {Position} from "./types";
 import {EmptyPiece} from './empty-piece';
 
 export class Square {
